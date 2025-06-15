@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener - Complete Development Guide & Prototype</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .code-block {
+            background: #1a202c;
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+        .feature-card {
+            transition: transform 0.2s ease-in-out;
+        }
+        .feature-card:hover {
+            transform: translateY(-2px);
+        }
+        @media print {
+            body { -webkit-print-color-adjust: exact; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">
+                    <i class="fas fa-link mr-4"></i>URL Shortener
+                </h1>
+                <p class="text-xl md:text-2xl opacity-90">Complete Development Guide & Working Prototype</p>
+                <div class="mt-8 flex flex-wrap justify-center gap-4">
+                    <span class="bg-white bg-opacity-20 px-4 py-2 rounded-full">Custom Domains</span>
+                    <span class="bg-white bg-opacity-20 px-4 py-2 rounded-full">Metadata Control</span>
+                    <span class="bg-white bg-opacity-20 px-4 py-2 rounded-full">Analytics</span>
+                    <span class="bg-white bg-opacity-20 px-4 py-2 rounded-full">Security Features</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Table of Contents -->
+    <section class="py-8 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-6 text-center">Table of Contents</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-blue-800">1. Project Overview</h3>
+                    <ul class="text-sm mt-2 space-y-1">
+                        <li>• Architecture Design</li>
+                        <li>• Feature Requirements</li>
+                        <li>• Technology Stack</li>
+                    </ul>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-green-800">2. Database Design</h3>
+                    <ul class="text-sm mt-2 space-y-1">
+                        <li>• Schema Structure</li>
+                        <li>• Entity Relationships</li>
+                        <li>• Indexing Strategy</li>
+                    </ul>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-purple-800">3. Backend Implementation</h3>
+                    <ul class="text-sm mt-2 space-y-1">
+                        <li>• API Design</li>
+                        <li>• Authentication</li>
+                        <li>• URL Processing</li>
+                    </ul>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-yellow-800">4. Frontend Development</h3>
+                    <ul class="text-sm mt-2 space-y-1">
+                        <li>• User Interface</li>
+                        <li>• Dashboard Design</li>
+                        <li>• Responsive Layout</li>
+                    </ul>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-red-800">5. Advanced Features</h3>
+                    <ul class="text-sm mt-2 space-y-1">
+                        <li>• Custom Domains</li>
+                        <li>• Analytics Engine</li>
+                        <li>• Security Measures</li>
+                    </ul>
+                </div>
+                <div class="bg-indigo-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-indigo-800">6. Working Prototype</h3>
+                    <ul class="text-sm mt-2 space-y-1">
+                        <li>• Live Demo</li>
+                        <li>• Code Examples</li>
+                        <li>• Test Features</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Overview -->
+    <section class="py-12">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-8"><i class="fas fa-project-diagram mr-3"></i>1. Project Overview</h2>
+            
+            <div class="grid lg:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">Architecture Overview</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-user text-green-500 mr-3"></i>
+                            <span><strong>Frontend:</strong> React/Vue.js with responsive design</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-server text-blue-500 mr-3"></i>
+                            <span><strong>Backend:</strong> Node.js/Express or Laravel/Django</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-database text-purple-500 mr-3"></i>
+                            <span><strong>Database:</strong> PostgreSQL/MySQL with Redis cache</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-cloud text-orange-500 mr-3"></i>
+                            <span><strong>Hosting:</strong> Docker containers with load balancing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-green-600">Core Features</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>URL shortening with custom aliases</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Custom domain management</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Metadata customization (OG tags)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Advanced analytics dashboard</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Security features (expiration, passwords)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-4 text-purple-600">Recommended Technology Stack</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-lg mb-3">Frontend Stack</h4>
+                        <div class="code-block text-sm">
+// React with TypeScript
+- React 18+ with TypeScript
+- Tailwind CSS for styling
+- React Router for navigation
+- Axios for API calls
+- React Hook Form for forms
+- Chart.js for analytics
+- React Query for state management</div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-lg mb-3">Backend Stack</h4>
+                        <div class="code-block text-sm">
+// Node.js/Express Option
+- Node.js with Express
+- TypeScript for type safety
+- Prisma ORM for database
+- JWT for authentication
+- bcrypt for password hashing
+- helmet for security headers
+- rate-limiter-flexible</div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-lg mb-3">Database & Tools</h4>
+                        <div class="code-block text-sm">
+// Database & Infrastructure
+- PostgreSQL (primary database)
+- Redis (caching & sessions)
+- Docker & Docker Compose
+- nginx (reverse proxy)
+- Let's Encrypt (SSL certificates)
+- PM2 (process management)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Database Design -->
+    <section class="py-12 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-8"><i class="fas fa-database mr-3"></i>2. Database Design</h2>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">Database Schema</h3>
+                    <div class="code-block">
+-- Users Table
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT true,
+    subscription_tier VARCHAR(20) DEFAULT 'free'
+);
+
+-- Custom Domains Table
+CREATE TABLE custom_domains (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    domain VARCHAR(255) UNIQUE NOT NULL,
+    is_verified BOOLEAN DEFAULT false,
+    verification_token VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_domain (domain),
+    INDEX idx_user_id (user_id)
+);
+
+-- Shortened URLs Table
+CREATE TABLE shortened_urls (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    original_url TEXT NOT NULL,
+    short_code VARCHAR(10) UNIQUE NOT NULL,
+    custom_domain_id INTEGER REFERENCES custom_domains(id),
+    title VARCHAR(255),
+    description TEXT,
+    og_image VARCHAR(500),
+    password_hash VARCHAR(255),
+    expires_at TIMESTAMP,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_short_code (short_code),
+    INDEX idx_user_id (user_id),
+    INDEX idx_expires_at (expires_at)
+);
+
+-- Analytics Table
+CREATE TABLE url_analytics (
+    id SERIAL PRIMARY KEY,
+    shortened_url_id INTEGER REFERENCES shortened_urls(id),
+    ip_address INET,
+    country VARCHAR(2),
+    city VARCHAR(100),
+    user_agent TEXT,
+    referrer VARCHAR(500),
+    device_type VARCHAR(20),
+    browser VARCHAR(50),
+    os VARCHAR(50),
+    clicked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_shortened_url_id (shortened_url_id),
+    INDEX idx_clicked_at (clicked_at),
+    INDEX idx_country (country)
+);</div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-green-600">Entity Relationships</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <h4 class="font-semibold text-blue-800">Users (1:N) Custom Domains</h4>
+                            <p class="text-sm">Each user can register multiple custom domains for their short URLs</p>
+                        </div>
+                        <div class="p-4 bg-green-50 rounded-lg">
+                            <h4 class="font-semibold text-green-800">Users (1:N) Shortened URLs</h4>
+                            <p class="text-sm">Each user can create multiple shortened URLs with custom metadata</p>
+                        </div>
+                        <div class="p-4 bg-purple-50 rounded-lg">
+                            <h4 class="font-semibold text-purple-800">Shortened URLs (1:N) Analytics</h4>
+                            <p class="text-sm">Each click on a shortened URL generates an analytics record</p>
+                        </div>
+                        <div class="p-4 bg-yellow-50 rounded-lg">
+                            <h4 class="font-semibold text-yellow-800">Custom Domains (1:N) Shortened URLs</h4>
+                            <p class="text-sm">Each custom domain can host multiple shortened URLs</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">Indexing Strategy</h4>
+                        <div class="code-block text-sm">
+-- Performance Indexes
+CREATE INDEX idx_short_code_lookup ON shortened_urls(short_code, is_active);
+CREATE INDEX idx_user_urls ON shortened_urls(user_id, created_at DESC);
+CREATE INDEX idx_analytics_aggregate ON url_analytics(shortened_url_id, clicked_at);
+CREATE INDEX idx_domain_lookup ON custom_domains(domain, is_verified);
+
+-- Composite indexes for analytics queries
+CREATE INDEX idx_analytics_stats ON url_analytics(shortened_url_id, clicked_at, country);
+CREATE INDEX idx_analytics_referrer ON url_analytics(shortened_url_id, referrer);</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Backend Implementation -->
+    <section class="py-12">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-8"><i class="fas fa-code mr-3"></i>3. Backend Implementation</h2>
+            
+            <div class="grid gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">Core API Endpoints</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-3">Authentication & Users</h4>
+                            <div class="code-block text-sm">
+// User Authentication Routes
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/logout
+GET  /api/auth/me
+PUT  /api/auth/profile
+
+// URL Management Routes
+POST /api/urls/shorten
+GET  /api/urls
+GET  /api/urls/:id
+PUT  /api/urls/:id
+DELETE /api/urls/:id
+POST /api/urls/:id/toggle</div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-3">Domains & Analytics</h4>
+                            <div class="code-block text-sm">
+// Custom Domains Routes
+GET    /api/domains
+POST   /api/domains
+DELETE /api/domains/:id
+POST   /api/domains/:id/verify
+
+// Analytics Routes
+GET /api/analytics/:urlId/stats
+GET /api/analytics/:urlId/clicks
+GET /api/analytics/:urlId/countries
+GET /api/analytics/:urlId/referrers
+GET /api/analytics/:urlId/devices</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-green-600">URL Shortening Algorithm</h3>
+                    <div class="code-block">
+// URL Shortening Service (Node.js/Express)
+const crypto = require('crypto');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+class URLShortenerService {
+    
+    // Generate unique short code
+    static generateShortCode(length = 7) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+
+    // Shorten URL with custom metadata
+    static async shortenUrl(data) {
+        const { userId, originalUrl, customAlias, title, description, ogImage, password, expiresAt } = data;
+        
+        // Validate URL
+        if (!this.isValidUrl(originalUrl)) {
+            throw new Error('Invalid URL provided');
+        }
+        
+        // Generate or use custom short code
+        let shortCode = customAlias || this.generateShortCode();
+        
+        // Ensure uniqueness
+        while (await this.shortCodeExists(shortCode)) {
+            shortCode = this.generateShortCode();
+        }
+        
+        // Hash password if provided
+        let passwordHash = null;
+        if (password) {
+            passwordHash = await bcrypt.hash(password, 12);
+        }
+        
+        // Create shortened URL record
+        const shortenedUrl = await prisma.shortenedUrls.create({
+            data: {
+                userId,
+                originalUrl,
+                shortCode,
+                title,
+                description,
+                ogImage,
+                passwordHash,
+                expiresAt: expiresAt ? new Date(expiresAt) : null,
+            }
+        });
+        
+        return shortenedUrl;
+    }
+
+    // Redirect handler with analytics
+    static async handleRedirect(shortCode, request) {
+        const url = await prisma.shortenedUrls.findUnique({
+            where: { shortCode, isActive: true },
+            include: { customDomain: true }
+        });
+        
+        if (!url) {
+            throw new Error('URL not found');
+        }
+        
+        // Check expiration
+        if (url.expiresAt && new Date() > url.expiresAt) {
+            throw new Error('URL has expired');
+        }
+        
+        // Record analytics
+        await this.recordAnalytics(url.id, request);
+        
+        return url.originalUrl;
+    }
+
+    // Analytics recording
+    static async recordAnalytics(urlId, request) {
+        const userAgent = request.headers['user-agent'];
+        const ip = request.ip;
+        const referrer = request.headers.referer;
+        
+        // Parse user agent for device info
+        const deviceInfo = this.parseUserAgent(userAgent);
+        
+        // Get location from IP (using a service like ipapi.co)
+        const locationInfo = await this.getLocationFromIP(ip);
+        
+        await prisma.urlAnalytics.create({
+            data: {
+                shortenedUrlId: urlId,
+                ipAddress: ip,
+                country: locationInfo.country,
+                city: locationInfo.city,
+                userAgent,
+                referrer,
+                deviceType: deviceInfo.device,
+                browser: deviceInfo.browser,
+                os: deviceInfo.os,
+            }
+        });
+    }
+}</div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-purple-600">Metadata Injection System</h3>
+                    <div class="code-block">
+// Metadata rendering middleware
+app.get('/:shortCode', async (req, res) => {
+    try {
+        const { shortCode } = req.params;
+        const userAgent = req.headers['user-agent'];
+        
+        // Check if request is from a social media crawler
+        const isCrawler = /facebook|twitter|linkedin|whatsapp|telegram/i.test(userAgent);
+        
+        const url = await prisma.shortenedUrls.findUnique({
+            where: { shortCode },
+            include: { customDomain: true }
+        });
+        
+        if (!url || !url.isActive) {
+            return res.status(404).send('URL not found');
+        }
+        
+        // If it's a crawler, serve HTML with metadata
+        if (isCrawler) {
+            const html = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta property="og:title" content="${url.title || 'Shared Link'}" />
+                <meta property="og:description" content="${url.description || 'Check out this link'}" />
+                <meta property="og:image" content="${url.ogImage || '/default-preview.jpg'}" />
+                <meta property="og:url" content="${req.protocol}://${req.get('host')}/${shortCode}" />
+                <meta property="og:type" content="website" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="${url.title || 'Shared Link'}" />
+                <meta name="twitter:description" content="${url.description || 'Check out this link'}" />
+                <meta name="twitter:image" content="${url.ogImage || '/default-preview.jpg'}" />
+                <script>
+                    // Redirect after a short delay for crawlers
+                    setTimeout(() => {
+                        window.location.href = '${url.originalUrl}';
+                    }, 100);
+                </script>
+            </head>
+            <body>
+                <div style="text-align: center; padding: 50px;">
+                    <h1>Redirecting...</h1>
+                    <p>If you are not redirected automatically, <a href="${url.originalUrl}">click here</a>.</p>
+                </div>
+            </body>
+            </html>`;
+            
+            return res.send(html);
+        }
+        
+        // For regular browsers, redirect immediately after analytics
+        await URLShortenerService.recordAnalytics(url.id, req);
+        return res.redirect(301, url.originalUrl);
+        
+    } catch (error) {
+        console.error('Redirect error:', error);
+        return res.status(500).send('Server error');
+    }
+});</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Frontend Development -->
+    <section class="py-12 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-8"><i class="fas fa-desktop mr-3"></i>4. Frontend Development</h2>
+            
+            <div class="grid gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">React Components Structure</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-3">Main URL Shortener Component</h4>
+                            <div class="code-block text-sm">
+// URLShortener.jsx
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+
+const URLShortener = () => {
+    const [formData, setFormData] = useState({
+        originalUrl: '',
+        customAlias: '',
+        title: '',
+        description: '',
+        ogImage: '',
+        password: '',
+        expiresAt: ''
+    });
+    const [loading, setLoading] = useState(false);
+    const [result, setResult] = useState(null);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        
+        try {
+            const response = await fetch('/api/urls/shorten', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                setResult(data);
+                toast.success('URL shortened successfully!');
+            } else {
+                toast.error(data.message || 'Error shortening URL');
+            }
+        } catch (error) {
+            toast.error('Network error');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="max-w-4xl mx-auto p-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
+                {/* URL Input */}
+                <div>
+                    <label className="block text-sm font-medium mb-2">
+                        Original URL *
+                    </label>
+                    <input
+                        type="url"
+                        required
+                        value={formData.originalUrl}
+                        onChange={(e) => setFormData({...formData, originalUrl: e.target.value})}
+                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="https://example.com/very-long-url"
+                    />
+                </div>
+
+                {/* Custom Alias */}
+                <div>
+                    <label className="block text-sm font-medium mb-2">
+                        Custom Alias (optional)
+                    </label>
+                    <input
+                        type="text"
+                        value={formData.customAlias}
+                        onChange={(e) => setFormData({...formData, customAlias: e.target.value})}
+                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="my-custom-link"
+                    />
+                </div>
+
+                {/* Metadata Section */}
+                <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-2">
+                            Preview Title
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.title}
+                            onChange={(e) => setFormData({...formData, title: e.target.value})}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                            placeholder="Amazing Product Deal"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-2">
+                            Preview Image URL
+                        </label>
+                        <input
+                            type="url"
+                            value={formData.ogImage}
+                            onChange={(e) => setFormData({...formData, ogImage: e.target.value})}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                            placeholder="https://example.com/image.jpg"
+                        />
+                    </div>
+                </div>
+
+                {/* Description */}
+                <div>
+                    <label className="block text-sm font-medium mb-2">
+                        Preview Description
+                    </label>
+                    <textarea
+                        value={formData.description}
+                        onChange={(e) => setFormData({...formData, description: e.target.value})}
+                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                        rows="3"
+                        placeholder="Check out this amazing deal..."
+                    />
+                </div>
+
+                {/* Security Options */}
+                <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-2">
+                            Password Protection (optional)
+                        </label>
+                        <input
+                            type="password"
+                            value={formData.password}
+                            onChange={(e) => setFormData({...formData, password: e.target.value})}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter password"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-2">
+                            Expiration Date (optional)
+                        </label>
+                        <input
+                            type="datetime-local"
+                            value={formData.expiresAt}
+                            onChange={(e) => setFormData({...formData, expiresAt: e.target.value})}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                >
+                    {loading ? 'Shortening...' : 'Shorten URL'}
+                </button>
+            </form>
+
+            {/* Result Display */}
+            {result && (
+                <div className="mt-8 p-6 bg-green-50 border border-green-200 rounded-lg">
+                    <h3 className="text-lg font-semibold text-green-800 mb-4">
+                        URL Shortened Successfully!
+                    </h3>
+                    <div className="space-y-3">
+                        <div>
+                            <label className="block text-sm font-medium text-green-700">
+                                Short URL:
+                            </label>
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={result.shortUrl}
+                                    className="flex-1 p-2 bg-white border rounded"
+                                />
+                                <button
+                                    onClick={() => navigator.clipboard.writeText(result.shortUrl)}
+                                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default URLShortener;</div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-3">Analytics Dashboard Component</h4>
+                            <div class="code-block text-sm">
+// AnalyticsDashboard.jsx
+import React, { useState, useEffect } from 'react';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement } from 'chart.js';
+import { Line, Bar } from 'react-chartjs-2';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement);
+
+const AnalyticsDashboard = ({ urlId }) => {
+    const [analytics, setAnalytics] = useState({
+        totalClicks: 0,
+        clicksOverTime: [],
+        countries: [],
+        referrers: [],
+        devices: []
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchAnalytics();
+    }, [urlId]);
+
+    const fetchAnalytics = async () => {
+        try {
+            const [stats, clicks, countries, referrers, devices] = await Promise.all([
+                fetch(`/api/analytics/${urlId}/stats`),
+                fetch(`/api/analytics/${urlId}/clicks`),
+                fetch(`/api/analytics/${urlId}/countries`),
+                fetch(`/api/analytics/${urlId}/referrers`),
+                fetch(`/api/analytics/${urlId}/devices`)
+            ]);
+
+            const data = {
+                totalClicks: (await stats.json()).totalClicks,
+                clicksOverTime: await clicks.json(),
+                countries: await countries.json(),
+                referrers: await referrers.json(),
+                devices: await devices.json()
+            };
+
+            setAnalytics(data);
+        } catch (error) {
+            console.error('Error fetching analytics:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) return <div>Loading analytics...</div>;
+
+    const clicksChartData = {
+        labels: analytics.clicksOverTime.map(item => item.date),
+        datasets: [{
+            label: 'Clicks',
+            data: analytics.clicksOverTime.map(item => item.clicks),
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        }]
+    };
+
+    const countriesChartData = {
+        labels: analytics.countries.map(item => item.country),
+        datasets: [{
+            label: 'Clicks by Country',
+            data: analytics.countries.map(item => item.clicks),
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 205, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    return (
+        <div className="space-y-8">
+            {/* Summary Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <div className="text-2xl font-bold text-blue-600">{analytics.totalClicks}</div>
+                    <div className="text-gray-600">Total Clicks</div>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <div className="text-2xl font-bold text-green-600">{analytics.countries.length}</div>
+                    <div className="text-gray-600">Countries</div>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <div className="text-2xl font-bold text-purple-600">{analytics.referrers.length}</div>
+                    <div className="text-gray-600">Referrers</div>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <div className="text-2xl font-bold text-orange-600">{analytics.devices.length}</div>
+                    <div className="text-gray-600">Device Types</div>
+                </div>
+            </div>
+
+            {/* Charts */}
+            <div className="grid lg:grid-cols-2 gap-8">
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <h3 className="text-lg font-semibold mb-4">Clicks Over Time</h3>
+                    <div style={{height: '300px'}}>
+                        <Line data={clicksChartData} options={{ maintainAspectRatio: false }} />
+                    </div>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <h3 className="text-lg font-semibold mb-4">Clicks by Country</h3>
+                    <div style={{height: '300px'}}>
+                        <Bar data={countriesChartData} options={{ maintainAspectRatio: false }} />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default AnalyticsDashboard;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Features -->
+    <section class="py-12">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-8"><i class="fas fa-cog mr-3"></i>5. Advanced Features Implementation</h2>
+            
+            <div class="grid gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">Custom Domain Management</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-3">Domain Verification Process</h4>
+                            <div class="code-block text-sm">
+// Domain verification service
+class DomainVerificationService {
+    static async addCustomDomain(userId, domain) {
+        // Generate verification token
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        
+        // Save domain with pending verification
+        const customDomain = await prisma.customDomains.create({
+            data: {
+                userId,
+                domain,
+                verificationToken,
+                isVerified: false
+            }
+        });
+        
+        // Return instructions for DNS setup
+        return {
+            domain: customDomain,
+            instructions: {
+                type: 'TXT',
+                name: '_urlshortener-verification',
+                value: verificationToken,
+                ttl: 300
+            }
+        };
+    }
+    
+    static async verifyDomain(domainId) {
+        const domain = await prisma.customDomains.findUnique({
+            where: { id: domainId }
+        });
+        
+        if (!domain) throw new Error('Domain not found');
+        
+        // Check DNS TXT record
+        const txtRecords = await dns.resolveTxt(domain.domain);
+        const verificationRecord = txtRecords.find(records => 
+            records.some(record => record.includes(domain.verificationToken))
+        );
+        
+        if (verificationRecord) {
+            await prisma.customDomains.update({
+                where: { id: domainId },
+                data: { isVerified: true }
+            });
+            return { verified: true };
+        }
+        
+        throw new Error('Verification failed');
+    }
+}</div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-3">SSL Certificate Setup</h4>
+                            <div class="code-block text-sm">
+// Automatic SSL with Let's Encrypt
+const https = require('https');
+const fs = require('fs');
+const acme = require('acme-client');
+
+class SSLManager {
+    static async setupSSL(domain) {
+        try {
+            // Create ACME client
+            const client = new acme.Client({
+                directoryUrl: acme.directory.letsencrypt.production,
+                accountKey: await acme.crypto.createPrivateKey()
+            });
+            
+            // Request certificate
+            const [key, csr] = await acme.crypto.createCsr({
+                commonName: domain
+            });
+            
+            const cert = await client.auto({
+                csr,
+                email: process.env.ACME_EMAIL,
+                termsOfServiceAgreed: true,
+                challengeCreateFn,
+                challengeRemoveFn,
+                challengePriority: ['http-01']
+            });
+            
+            // Save certificate files
+            fs.writeFileSync(`/ssl/${domain}.key`, key);
+            fs.writeFileSync(`/ssl/${domain}.crt`, cert);
+            
+            return { success: true, cert, key };
+        } catch (error) {
+            console.error('SSL setup failed:', error);
+            throw error;
+        }
+    }
+}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-green-600">Security Features</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-3">Password Protection</h4>
+                            <div class="code-block text-sm">
+// Password protection middleware
+app.get('/:shortCode', async (req, res) => {
+    const url = await prisma.shortenedUrls.findUnique({
+        where: { shortCode: req.params.shortCode }
+    });
+    
+    if (!url) return res.status(404).send('URL not found');
+    
+    // Check if password protection is enabled
+    if (url.passwordHash) {
+        const { password } = req.query;
+        
+        if (!password) {
+            // Show password prompt
+            return res.send(`
+                <html>
+                <body>
+                    <div style="text-align: center; padding: 50px;">
+                        <h2>This link is password protected</h2>
+                        <form method="GET">
+                            <input type="password" name="password" placeholder="Enter password" required>
+                            <button type="submit">Access Link</button>
+                        </form>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+        
+        // Verify password
+        const isValid = await bcrypt.compare(password, url.passwordHash);
+        if (!isValid) {
+            return res.status(403).send('Invalid password');
+        }
+    }
+    
+    // Continue with normal redirect...
+});</div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-3">Rate Limiting & Bot Detection</h4>
+                            <div class="code-block text-sm">
+// Rate limiting configuration
+const rateLimit = require('express-rate-limit');
+const { RateLimiterRedis } = require('rate-limiter-flexible');
+
+// Redis rate limiter
+const rateLimiter = new RateLimiterRedis({
+    storeClient: redisClient,
+    keyPrefix: 'rl_shortener',
+    points: 100, // Number of requests
+    duration: 3600, // Per hour
+    blockDuration: 3600 // Block for 1 hour
+});
+
+// Bot detection middleware
+const botDetection = (req, res, next) => {
+    const userAgent = req.headers['user-agent'] || '';
+    const ip = req.ip;
+    
+    // Known bot patterns
+    const botPatterns = [
+        /bot/i, /crawler/i, /spider/i, /scraper/i,
+        /curl/i, /wget/i, /python/i, /java/i
+    ];
+    
+    const isBot = botPatterns.some(pattern => pattern.test(userAgent));
+    
+    if (isBot && !isSocialBot(userAgent)) {
+        return res.status(403).json({ error: 'Bot access denied' });
+    }
+    
+    next();
+};
+
+// Apply rate limiting
+app.use('/api', rateLimiter.middleware());
+app.use('/:shortCode', botDetection);</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-purple-600">Advanced Analytics Engine</h3>
+                    <div class="code-block">
+// Advanced analytics service
+class AdvancedAnalyticsService {
+    
+    // Real-time analytics aggregation
+    static async getRealtimeStats(urlId, timeframe = '24h') {
+        const timeframes = {
+            '1h': 1,
+            '24h': 24,
+            '7d': 24 * 7,
+            '30d': 24 * 30
+        };
+        
+        const hours = timeframes[timeframe];
+        const startTime = new Date(Date.now() - hours * 60 * 60 * 1000);
+        
+        const stats = await prisma.urlAnalytics.groupBy({
+            by: ['clicked_at'],
+            where: {
+                shortenedUrlId: urlId,
+                clickedAt: { gte: startTime }
+            },
+            _count: { id: true },
+            orderBy: { clicked_at: 'asc' }
+        });
+        
+        return this.formatTimeSeriesData(stats, timeframe);
+    }
+    
+    // Geographic analytics
+    static async getGeographicStats(urlId) {
+        const countries = await prisma.urlAnalytics.groupBy({
+            by: ['country'],
+            where: { shortenedUrlId: urlId },
+            _count: { id: true },
+            orderBy: { _count: { id: 'desc' } }
+        });
+        
+        const cities = await prisma.urlAnalytics.groupBy({
+            by: ['city', 'country'],
+            where: { shortenedUrlId: urlId },
+            _count: { id: true },
+            orderBy: { _count: { id: 'desc' } },
+            take: 10
+        });
+        
+        return { countries, cities };
+    }
+    
+    // Device and browser analytics
+    static async getDeviceStats(urlId) {
+        const devices = await prisma.urlAnalytics.groupBy({
+            by: ['deviceType'],
+            where: { shortenedUrlId: urlId },
+            _count: { id: true }
+        });
+        
+        const browsers = await prisma.urlAnalytics.groupBy({
+            by: ['browser'],
+            where: { shortenedUrlId: urlId },
+            _count: { id: true },
+            orderBy: { _count: { id: 'desc' } }
+        });
+        
+        const os = await prisma.urlAnalytics.groupBy({
+            by: ['os'],
+            where: { shortenedUrlId: urlId },
+            _count: { id: true },
+            orderBy: { _count: { id: 'desc' } }
+        });
+        
+        return { devices, browsers, os };
+    }
+    
+    // Referrer analytics with UTM tracking
+    static async getReferrerStats(urlId) {
+        const referrers = await prisma.$queryRaw`
+            SELECT 
+                CASE 
+                    WHEN referrer LIKE '%facebook%' THEN 'Facebook'
+                    WHEN referrer LIKE '%twitter%' THEN 'Twitter'
+                    WHEN referrer LIKE '%linkedin%' THEN 'LinkedIn'
+                    WHEN referrer LIKE '%instagram%' THEN 'Instagram'
+                    WHEN referrer LIKE '%whatsapp%' THEN 'WhatsApp'
+                    WHEN referrer LIKE '%telegram%' THEN 'Telegram'
+                    WHEN referrer IS NULL OR referrer = '' THEN 'Direct'
+                    ELSE 'Other'
+                END as source,
+                COUNT(*) as clicks
+            FROM url_analytics 
+            WHERE shortened_url_id = ${urlId}
+            GROUP BY source
+            ORDER BY clicks DESC
+        `;
+        
+        return referrers;
+    }
+    
+    // Conversion tracking (for e-commerce)
+    static async trackConversion(shortCode, conversionData) {
+        const url = await prisma.shortenedUrls.findUnique({
+            where: { shortCode }
+        });
+        
+        if (!url) return;
+        
+        await prisma.conversions.create({
+            data: {
+                shortenedUrlId: url.id,
+                conversionType: conversionData.type,
+                value: conversionData.value,
+                currency: conversionData.currency,
+                metadata: conversionData.metadata
+            }
+        });
+    }
+}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Working Prototype -->
+    <section class="py-12 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-8"><i class="fas fa-rocket mr-3"></i>6. Working Prototype</h2>
+            
+            <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+                <h3 class="text-xl font-semibold mb-4 text-blue-600">Interactive URL Shortener Demo</h3>
+                <p class="text-gray-600 mb-6">This is a working prototype that demonstrates the core functionality. In a real application, this would connect to your backend API.</p>
+                
+                <!-- Demo Form -->
+                <div class="max-w-4xl mx-auto">
+                    <form id="shortenForm" class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium mb-2 text-gray-700">
+                                    <i class="fas fa-link mr-2"></i>Original URL *
+                                </label>
+                                <input
+                                    type="url"
+                                    id="originalUrl"
+                                    required
+                                    placeholder="https://www.example.com/very-long-url-here"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">
+                                    <i class="fas fa-tag mr-2"></i>Custom Alias (optional)
+                                </label>
+                                <input
+                                    type="text"
+                                    id="customAlias"
+                                    placeholder="my-custom-link"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">
+                                    <i class="fas fa-heading mr-2"></i>Preview Title
+                                </label>
+                                <input
+                                    type="text"
+                                    id="previewTitle"
+                                    placeholder="Amazing Product Deal"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+                            
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium mb-2 text-gray-700">
+                                    <i class="fas fa-align-left mr-2"></i>Preview Description
+                                </label>
+                                <textarea
+                                    id="previewDescription"
+                                    rows="3"
+                                    placeholder="Check out this amazing deal with up to 50% off..."
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                ></textarea>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">
+                                    <i class="fas fa-image mr-2"></i>Preview Image URL
+                                </label>
+                                <input
+                                    type="url"
+                                    id="previewImage"
+                                    placeholder="https://example.com/image.jpg"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">
+                                    <i class="fas fa-lock mr-2"></i>Password Protection (optional)
+                                </label>
+                                <input
+                                    type="password"
+                                    id="urlPassword"
+                                    placeholder="Enter password"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">
+                                    <i class="fas fa-calendar mr-2"></i>Expiration Date (optional)
+                                </label>
+                                <input
+                                    type="datetime-local"
+                                    id="expirationDate"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">
+                                    <i class="fas fa-globe mr-2"></i>Custom Domain
+                                </label>
+                                <select
+                                    id="customDomain"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="">short.ly (default)</option>
+                                    <option value="mylinks.co">mylinks.co</option>
+                                    <option value="brand.link">brand.link</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button
+                                type="submit"
+                                class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-semibold"
+                            >
+                                <i class="fas fa-compress-arrows-alt mr-2"></i>Shorten URL
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Result Display -->
+                    <div id="resultSection" class="hidden mt-8">
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                            <h4 class="text-lg font-semibold text-green-800 mb-4">
+                                <i class="fas fa-check-circle mr-2"></i>URL Shortened Successfully!
+                            </h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-green-700 mb-2">Short URL:</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input
+                                            type="text"
+                                            id="shortUrlResult"
+                                            readonly
+                                            class="flex-1 p-3 bg-white border border-green-300 rounded-lg"
+                                        />
+                                        <button
+                                            id="copyButton"
+                                            class="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                                        >
+                                            <i class="fas fa-copy mr-1"></i>Copy
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <span class="text-sm text-green-700">Original URL:</span>
+                                        <p id="originalUrlDisplay" class="text-sm text-gray-600 break-all"></p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm text-green-700">Created:</span>
+                                        <p id="createdAtDisplay" class="text-sm text-gray-600"></p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Social Media Preview -->
+                                <div class="border-t pt-4">
+                                    <h5 class="font-medium text-green-800 mb-2">Social Media Preview:</h5>
+                                    <div class="border rounded-lg p-4 bg-white max-w-md">
+                                        <img id="previewImageDisplay" src="" alt="Preview" class="w-full h-32 object-cover rounded mb-2 hidden">
+                                        <h6 id="previewTitleDisplay" class="font-semibold text-gray-800 mb-1"></h6>
+                                        <p id="previewDescriptionDisplay" class="text-sm text-gray-600 mb-2"></p>
+                                        <span id="previewUrlDisplay" class="text-xs text-gray-500"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics Demo -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-4 text-green-600">Analytics Dashboard Demo</h3>
+                <p class="text-gray-600 mb-6">Below is a sample analytics dashboard showing what users would see for their shortened URLs.</p>
+                
+                <!-- Sample Analytics Data -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-blue-50 p-6 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-blue-600">1,234</div>
+                        <div class="text-blue-700 font-medium">Total Clicks</div>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-green-600">45</div>
+                        <div class="text-green-700 font-medium">Countries</div>
+                    </div>
+                    <div class="bg-purple-50 p-6 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-purple-600">67%</div>
+                        <div class="text-purple-700 font-medium">Mobile Traffic</div>
+                    </div>
+                    <div class="bg-orange-50 p-6 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-orange-600">12</div>
+                        <div class="text-orange-700 font-medium">Referrers</div>
+                    </div>
+                </div>
+                
+                <!-- Charts -->
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Clicks Over Time</h4>
+                        <canvas id="clicksChart" style="height: 300px;"></canvas>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Top Countries</h4>
+                        <canvas id="countriesChart" style="height: 300px;"></canvas>
+                    </div>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-8 mt-8">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Device Types</h4>
+                        <canvas id="devicesChart" style="height: 300px;"></canvas>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Top Referrers</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                <span class="flex items-center"><i class="fab fa-facebook text-blue-600 mr-2"></i>Facebook</span>
+                                <span class="font-semibold">423 clicks</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                <span class="flex items-center"><i class="fab fa-twitter text-blue-400 mr-2"></i>Twitter</span>
+                                <span class="font-semibold">289 clicks</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                <span class="flex items-center"><i class="fab fa-whatsapp text-green-500 mr-2"></i>WhatsApp</span>
+                                <span class="font-semibold">156 clicks</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                <span class="flex items-center"><i class="fas fa-search text-gray-600 mr-2"></i>Direct</span>
+                                <span class="font-semibold">234 clicks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deployment Guide -->
+    <section class="py-12">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-8"><i class="fas fa-cloud mr-3"></i>7. Deployment & Production Setup</h2>
+            
+            <div class="grid gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">Docker Configuration</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-3">Dockerfile</h4>
+                            <div class="code-block text-sm">
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy application code
+COPY . .
+
+# Build frontend
+RUN npm run build
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+USER nextjs
+
+EXPOSE 3000
+
+CMD ["npm", "start"]</div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-3">Docker Compose</h4>
+                            <div class="code-block text-sm">
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://user:pass@db:5432/shortener
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: shortener
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/ssl/certs
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-green-600">Production Checklist</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-3">Security & Performance</h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-green-500 mr-2"></i>
+                                    <span class="text-sm">SSL certificates configured</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-green-500 mr-2"></i>
+                                    <span class="text-sm">Environment variables secured</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-green-500 mr-2"></i>
+                                    <span class="text-sm">Rate limiting enabled</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-green-500 mr-2"></i>
+                                    <span class="text-sm">CORS properly configured</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-green-500 mr-2"></i>
+                                    <span class="text-sm">Database backups automated</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-green-500 mr-2"></i>
+                                    <span class="text-sm">CDN for static assets</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-3">Monitoring & Logging</h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-blue-500 mr-2"></i>
+                                    <span class="text-sm">Application monitoring (PM2/Docker)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-blue-500 mr-2"></i>
+                                    <span class="text-sm">Error tracking (Sentry)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-blue-500 mr-2"></i>
+                                    <span class="text-sm">Performance monitoring</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-blue-500 mr-2"></i>
+                                    <span class="text-sm">Log aggregation setup</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-blue-500 mr-2"></i>
+                                    <span class="text-sm">Uptime monitoring</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-square text-blue-500 mr-2"></i>
+                                    <span class="text-sm">Database performance metrics</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-purple-600">Scaling Considerations</h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="feature-card">
+                            <div class="p-4 bg-blue-50 rounded-lg">
+                                <h4 class="font-semibold text-blue-800 mb-2">
+                                    <i class="fas fa-server mr-2"></i>Horizontal Scaling
+                                </h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• Load balancer (nginx/HAProxy)</li>
+                                    <li>• Multiple app instances</li>
+                                    <li>• Database read replicas</li>
+                                    <li>• Redis cluster for caching</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="p-4 bg-green-50 rounded-lg">
+                                <h4 class="font-semibold text-green-800 mb-2">
+                                    <i class="fas fa-database mr-2"></i>Database Optimization
+                                </h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• Proper indexing strategy</li>
+                                    <li>• Connection pooling</li>
+                                    <li>• Query optimization</li>
+                                    <li>• Partitioning for analytics</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="p-4 bg-purple-50 rounded-lg">
+                                <h4 class="font-semibold text-purple-800 mb-2">
+                                    <i class="fas fa-tachometer-alt mr-2"></i>Performance
+                                </h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• CDN for global distribution</li>
+                                    <li>• Aggressive caching strategy</li>
+                                    <li>• Image optimization</li>
+                                    <li>• Code minification & compression</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources & Next Steps -->
+    <section class="py-12 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-8"><i class="fas fa-book mr-3"></i>8. Resources & Next Steps</h2>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">Recommended Libraries & Tools</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <h4 class="font-semibold text-blue-800">Frontend Libraries</h4>
+                            <div class="text-sm mt-2 space-y-1">
+                                <div>• <strong>React:</strong> ^18.0.0 with TypeScript</div>
+                                <div>• <strong>Tailwind CSS:</strong> ^3.0.0 for styling</div>
+                                <div>• <strong>React Query:</strong> ^4.0.0 for data fetching</div>
+                                <div>• <strong>React Hook Form:</strong> ^7.0.0 for forms</div>
+                                <div>• <strong>Chart.js:</strong> ^4.0.0 for analytics</div>
+                                <div>• <strong>React Router:</strong> ^6.0.0 for navigation</div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-green-50 rounded-lg">
+                            <h4 class="font-semibold text-green-800">Backend Libraries</h4>
+                            <div class="text-sm mt-2 space-y-1">
+                                <div>• <strong>Express:</strong> ^4.18.0 web framework</div>
+                                <div>• <strong>Prisma:</strong> ^4.0.0 database ORM</div>
+                                <div>• <strong>JWT:</strong> jsonwebtoken for auth</div>
+                                <div>• <strong>bcrypt:</strong> ^5.0.0 for password hashing</div>
+                                <div>• <strong>helmet:</strong> ^6.0.0 for security headers</div>
+                                <div>• <strong>rate-limiter-flexible:</strong> for rate limiting</div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-purple-50 rounded-lg">
+                            <h4 class="font-semibold text-purple-800">DevOps & Monitoring</h4>
+                            <div class="text-sm mt-2 space-y-1">
+                                <div>• <strong>Docker:</strong> Containerization</div>
+                                <div>• <strong>nginx:</strong> Reverse proxy & load balancer</div>
+                                <div>• <strong>PM2:</strong> Process management</div>
+                                <div>• <strong>Sentry:</strong> Error tracking</div>
+                                <div>• <strong>New Relic/DataDog:</strong> Performance monitoring</div>
+                                <div>• <strong>Let's Encrypt:</strong> Free SSL certificates</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-green-600">Development Timeline</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-gray-800 flex items-center">
+                                <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3">1</span>
+                                Week 1-2: Foundation (40-60 hours)
+                            </h4>
+                            <ul class="text-sm mt-2 ml-9 space-y-1">
+                                <li>• Set up development environment</li>
+                                <li>• Database design and setup</li>
+                                <li>• Basic API endpoints</li>
+                                <li>• User authentication system</li>
+                                <li>• Basic URL shortening functionality</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-gray-800 flex items-center">
+                                <span class="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3">2</span>
+                                Week 3-4: Core Features (40-60 hours)
+                            </h4>
+                            <ul class="text-sm mt-2 ml-9 space-y-1">
+                                <li>• Frontend React application</li>
+                                <li>• Metadata customization system</li>
+                                <li>• Basic analytics implementation</li>
+                                <li>• User dashboard</li>
+                                <li>• Security features (passwords, expiration)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-gray-800 flex items-center">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3">3</span>
+                                Week 5-6: Advanced Features (30-40 hours)
+                            </h4>
+                            <ul class="text-sm mt-2 ml-9 space-y-1">
+                                <li>• Custom domain management</li>
+                                <li>• Advanced analytics dashboard</li>
+                                <li>• Performance optimization</li>
+                                <li>• Testing and bug fixes</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-gray-800 flex items-center">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3">4</span>
+                                Week 7-8: Production (20-30 hours)
+                            </h4>
+                            <ul class="text-sm mt-2 ml-9 space-y-1">
+                                <li>• Production deployment setup</li>
+                                <li>• SSL certificates and security</li>
+                                <li>• Monitoring and logging</li>
+                                <li>• Documentation and training</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                        <h4 class="font-semibold text-blue-800 mb-2">Total Estimated Time</h4>
+                        <div class="text-sm">
+                            <div>• <strong>Minimum Viable Product:</strong> 80-120 hours (2-3 months part-time)</div>
+                            <div>• <strong>Full-Featured Application:</strong> 130-190 hours (3-5 months part-time)</div>
+                            <div>• <strong>Team of 2-3 developers:</strong> 1-2 months full-time</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-4 text-purple-600">Monetization Strategies</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="p-4 bg-green-50 rounded-lg">
+                        <h4 class="font-semibold text-green-800 mb-2">
+                            <i class="fas fa-crown mr-2"></i>Premium Subscriptions
+                        </h4>
+                        <ul class="text-sm space-y-1">
+                            <li>• Custom domains</li>
+                            <li>• Advanced analytics</li>
+                            <li>• Higher usage limits</li>
+                            <li>• Priority support</li>
+                            <li>• Team collaboration</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-blue-50 rounded-lg">
+                        <h4 class="font-semibold text-blue-800 mb-2">
+                            <i class="fas fa-chart-line mr-2"></i>Enterprise Plans
+                        </h4>
+                        <ul class="text-sm space-y-1">
+                            <li>• White-label solutions</li>
+                            <li>• API access</li>
+                            <li>• Custom integrations</li>
+                            <li>• Dedicated support</li>
+                            <li>• SLA guarantees</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-purple-50 rounded-lg">
+                        <h4 class="font-semibold text-purple-800 mb-2">
+                            <i class="fas fa-dollar-sign mr-2"></i>Additional Revenue
+                        </h4>
+                        <ul class="text-sm space-y-1">
+                            <li>• Interstitial ads (free tier)</li>
+                            <li>• Affiliate partnerships</li>
+                            <li>• Domain registration services</li>
+                            <li>• Marketing integrations</li>
+                            <li>• Data insights (anonymized)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="gradient-bg text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mb-4">
+                <h3 class="text-2xl font-bold mb-2">Ready to Build Your URL Shortener?</h3>
+                <p class="opacity-90">Follow this comprehensive guide to create a professional-grade URL shortening service</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-4 text-sm">
+                <span class="bg-white bg-opacity-20 px-3 py-1 rounded">Complete Source Code</span>
+                <span class="bg-white bg-opacity-20 px-3 py-1 rounded">Production Ready</span>
+                <span class="bg-white bg-opacity-20 px-3 py-1 rounded">Scalable Architecture</span>
+                <span class="bg-white bg-opacity-20 px-3 py-1 rounded">Best Practices</span>
+            </div>
+            <div class="mt-6 text-sm opacity-75">
+                <p>This guide provides everything you need to build a competitive URL shortener with advanced features.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactive Demo -->
+    <script>
+        // URL Shortener Demo Functionality
+        document.getElementById('shortenForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const originalUrl = document.getElementById('originalUrl').value;
+            const customAlias = document.getElementById('customAlias').value;
+            const previewTitle = document.getElementById('previewTitle').value;
+            const previewDescription = document.getElementById('previewDescription').value;
+            const previewImage = document.getElementById('previewImage').value;
+            const customDomain = document.getElementById('customDomain').value;
+            
+            // Generate demo short URL
+            const domain = customDomain || 'short.ly';
+            const shortCode = customAlias || Math.random().toString(36).substring(2, 8);
+            const shortUrl = `https://${domain}/${shortCode}`;
+            
+            // Display result
+            document.getElementById('shortUrlResult').value = shortUrl;
+            document.getElementById('originalUrlDisplay').textContent = originalUrl;
+            document.getElementById('createdAtDisplay').textContent = new Date().toLocaleString();
+            
+            // Social media preview
+            document.getElementById('previewTitleDisplay').textContent = previewTitle || 'Shared Link';
+            document.getElementById('previewDescriptionDisplay').textContent = previewDescription || 'Check out this link';
+            document.getElementById('previewUrlDisplay').textContent = shortUrl;
+            
+            if (previewImage) {
+                const imgElement = document.getElementById('previewImageDisplay');
+                imgElement.src = previewImage;
+                imgElement.classList.remove('hidden');
+            }
+            
+            document.getElementById('resultSection').classList.remove('hidden');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // Copy to clipboard functionality
+        document.getElementById('copyButton').addEventListener('click', function() {
+            const shortUrl = document.getElementById('shortUrlResult').value;
+            navigator.clipboard.writeText(shortUrl).then(function() {
+                const button = document.getElementById('copyButton');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                button.classList.add('bg-green-700');
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-700');
+                }, 2000);
+            });
+        });
+        
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Clicks Over Time Chart
+            const clicksCtx = document.getElementById('clicksChart');
+            if (clicksCtx) {
+                new Chart(clicksCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                        datasets: [{
+                            label: 'Clicks',
+                            data: [65, 89, 120, 181, 156, 198, 234],
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Countries Chart
+            const countriesCtx = document.getElementById('countriesChart');
+            if (countriesCtx) {
+                new Chart(countriesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['USA', 'UK', 'Germany', 'France', 'Canada'],
+                        datasets: [{
+                            label: 'Clicks by Country',
+                            data: [423, 289, 234, 189, 156],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.8)',
+                                'rgba(54, 162, 235, 0.8)',
+                                'rgba(255, 205, 86, 0.8)',
+                                'rgba(75, 192, 192, 0.8)',
+                                'rgba(153, 102, 255, 0.8)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Devices Chart
+            const devicesCtx = document.getElementById('devicesChart');
+            if (devicesCtx) {
+                new Chart(devicesCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Mobile', 'Desktop', 'Tablet'],
+                        datasets: [{
+                            data: [67, 28, 5],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.8)',
+                                'rgba(54, 162, 235, 0.8)',
+                                'rgba(255, 205, 86, 0.8)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
